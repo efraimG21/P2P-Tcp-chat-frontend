@@ -27,7 +27,7 @@ export class ChatSectionComponent {
       senderUid: "",
       content: this.messageForm.get('messageInput')?.value,
       timeStamp: new Date(),
-      status: 'Received',
+      status: 'Read',
     }]);
 
   }
