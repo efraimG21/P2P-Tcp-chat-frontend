@@ -7,7 +7,23 @@
   .nav-bar-section {
     background-color: #202c33;
     height: 4rem;
-    @apply w-full;
+    @apply w-full flex flex-row items-center;
+
+    .chat-logo {
+      @apply px-4 w-2/5;
+
+      .svg-icon {
+        fill: #128c7e;
+      }
+    }
+
+    ul {
+      @apply w-3/5 pl-10 gap-14 flex flex-row items-center;
+
+      li {
+        @apply cursor-pointer hover:text-emerald-700;
+      }
+    }
   }
 
   .router-section {

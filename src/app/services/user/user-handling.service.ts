@@ -2,29 +2,26 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
+import {UserRequestingService} from "./user-requesting.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserHandlingService {
-
+  isActive$ = new BehaviorSubject<boolean>(false);
   currentUserUid = new BehaviorSubject<string | null>(null);
 
-  private readonly API_Url: string = 'http://0.0.0.0:8080/user-handling';
 
-  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private router: Router,) {
+  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient,
+              private router: Router, private userRequestingService: UserRequestingService) {
     this.currentUserUid.subscribe(value => {
       if (value) {
-        this.doseUserExists().subscribe(value => {
+        this.userRequestingService.doseUserExists().subscribe(value => {
           if (!value) {
             this.router.navigate(['/']).then();
           }
         })
       }
     })
-  }
-
-  doseUserExists(): Observable<boolean> {
-    return this.http.get<boolean>(`${this.API_Url}/is-exists/${this.currentUserUid.getValue()}`)
   }
 }

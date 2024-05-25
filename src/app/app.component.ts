@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {UserHandlingService} from "./services/user/user-handling.service";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,7 @@ import {Component} from '@angular/core';
 })
 export class AppComponent {
   title = 'Angular-P2P-Tcp-Chat';
+
+  constructor(public userHandlingService: UserHandlingService) {
+  }
 }

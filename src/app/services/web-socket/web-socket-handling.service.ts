@@ -14,6 +14,7 @@ export class WebSocketHandlingService {
   constructor(private userHandlingService: UserHandlingService) {
     const socketURL = `${this.API_URL}/${userHandlingService.currentUserUid.getValue()}`;
     this.socket$ = webSocket(socketURL);
+    this.userHandlingService.isActive$.next(true);
   }
 
   sendMessage(message: string): void {
@@ -25,5 +26,6 @@ export class WebSocketHandlingService {
 
   onClose() {
     this.socket$.complete()
+    this.userHandlingService.isActive$.next(false);
   }
 }
