@@ -14,7 +14,8 @@
           <div class="flex justify-start gap-1.5">
             <p class="flex justify-center items-center">
               @if (message.status === 'Sent') {
-                <svg viewBox="0 0 12 11" height="11" width="16" preserveAspectRatio="xMidYMid meet" class="" fill="none">
+                <svg viewBox="0 0 12 11" height="11" width="16" preserveAspectRatio="xMidYMid meet" class=""
+                     fill="none">
                   <title>
                     msg-check</title>
                   <path
@@ -38,7 +39,8 @@
       </div>
     </div>
     <div class="w-full flex items-center p-3 bg-gray-700">
-      <button mat-button type="button" class="send-icon-button" [disabled]="!messageInput.valid" (click)="sendMessage()">
+      <button mat-button type="button" class="send-icon-button" [disabled]="!messageInput.valid"
+              (click)="sendMessage()">
         <svg viewBox="0 0 24 24" height="24" width="24" preserveAspectRatio="xMidYMid meet" x="0px" y="0px"
              style="transform: rotate(180deg);">
           <title>send</title>

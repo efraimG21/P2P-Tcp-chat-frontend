@@ -1,4 +1,3 @@
-
 export interface FrameSocketInterface {
   typeOf: 'userLogIn' | 'userLogOut' | 'messageReceived';
   content: string | FrameMessageSocketInterface;

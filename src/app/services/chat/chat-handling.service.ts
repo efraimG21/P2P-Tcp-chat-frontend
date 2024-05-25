@@ -14,8 +14,7 @@ export class ChatHandlingService {
 
 
   constructor(
-    private chatRequestingService: ChatRequestingService, private userHandlingService: UserHandlingService)
-  {
+    private chatRequestingService: ChatRequestingService, private userHandlingService: UserHandlingService) {
     this.selectedUserUid$.subscribe(value => {
       if (this.userHandlingService.currentUserUid.value && value) {
         this.getChat(this.userHandlingService.currentUserUid.value, value);
