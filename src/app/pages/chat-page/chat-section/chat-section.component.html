@@ -1,11 +1,11 @@
 <section class="bg-gray-500 flex flex-col h-full">
-  <ng-container *ngIf="messageList else chat">
+  <ng-container *ngIf="!(messageList$ | async) else chat">
     <h1 class="h-full flex justify-center items-center font-bold text-3xl">To start chat press user</h1>
   </ng-container>
   <ng-template #chat>
     <div class="h-full w-full overflow-scroll">
       <div
-        *ngFor="let message of (messageList | async); let index = index;"
+        *ngFor="let message of (messageList$ | async); let index = index;"
         class="flex pt-1 pb-1 pl-2" [ngClass]="{'justify-end pr-2': index % 2 == 0}"
       >
         <div class="message-block"

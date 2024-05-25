@@ -33,7 +33,7 @@ export class UsersListSectionComponent implements OnDestroy {
   }
 
   onSelectedUser(userUid: string) {
-    this.chatHandlingService.selectedUserUid.next(userUid);
+    this.chatHandlingService.selectedUserUid$.next(userUid);
   }
 
   ngOnDestroy(): void {

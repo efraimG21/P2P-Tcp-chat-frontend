@@ -12,7 +12,7 @@
   <div class="users-list">
     <button *ngFor="let user of userListState ? (knownUsersList$ | async) : (unknownUsersList$ | async)"
             class="w-full flex flex-row p-3 border-b border-black gap-3"
-            [ngClass]="{'bg-gray-700': chatHandlingService.selectedUserUid.value === user._id}"
+            [ngClass]="{'bg-gray-700': chatHandlingService.selectedUserUid$.value === user._id}"
             (click)="onSelectedUser(user._id)">
       <div>
         <svg viewBox="0 0 212 212" height="50" width="50" preserveAspectRatio="xMidYMid meet" class="xh8yej3 x5yr21d"

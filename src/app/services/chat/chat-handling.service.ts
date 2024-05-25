@@ -1,29 +1,34 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
-import {ChatInterface} from "../../interfaces/chat-interface";
+import {BehaviorSubject} from "rxjs";
 import {UserHandlingService} from "../user/user-handling.service";
+import {ChatRequestingService} from "./chat-requesting.service";
+import {MessageInterface} from "../../interfaces/message-interface";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatHandlingService {
-  selectedUserUid = new BehaviorSubject<string | null>(null);
-  selectedChatUid = new BehaviorSubject<string | null>(null);
+  selectedUserUid$ = new BehaviorSubject<string | null>(null);
+  selectedChatUid$ = new BehaviorSubject<string | null>(null);
+  messages$ = new BehaviorSubject<MessageInterface[]>([]);
 
-  readonly API_URL: string = 'http://0.0.0.0:8080/chat';
-  constructor(private http: HttpClient, private userHandlingService: UserHandlingService) {
-    this.selectedUserUid.subscribe(value => {
-      if (value && userHandlingService.currentUserUid.value) {
-        this.getChat(userHandlingService.currentUserUid.value, value)
+
+  constructor(
+    private chatRequestingService: ChatRequestingService, private userHandlingService: UserHandlingService)
+  {
+    this.selectedUserUid$.subscribe(value => {
+      if (this.userHandlingService.currentUserUid.value && value) {
+        this.getChat(this.userHandlingService.currentUserUid.value, value);
       }
     })
   }
 
-
-  getChat(uid1: string, uid2: string): Observable<ChatInterface> {
-    return this.http.get<ChatInterface>(
-      `${this.API_URL}/get/${uid1}/${uid2}`
-    );
+  private getChat(currUserUid: string, otherUserUid: string) {
+    this.chatRequestingService.getChat(currUserUid, otherUserUid)
+      .subscribe(value => {
+        this.selectedChatUid$.next(value._id);
+        this.messages$.next(value.messages);
+      })
   }
+
 }
