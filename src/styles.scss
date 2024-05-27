@@ -39,6 +39,9 @@ $Angular-P2P-Tcp-Chat-theme: mat.define-light-theme((
 @tailwind components;
 @tailwind utilities;
 
+// regular style toast
+@import 'ngx-toastr/toastr';
+
 html, body {
   height: 100%;
 }

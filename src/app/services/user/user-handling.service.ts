@@ -11,16 +11,19 @@ export class UserHandlingService {
   isActive$ = new BehaviorSubject<boolean>(false);
   currentUserUid = new BehaviorSubject<string | null>(null);
 
-
-  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient,
-              private router: Router, private userRequestingService: UserRequestingService) {
+  constructor(private router: Router, private userRequestingService: UserRequestingService)
+  {
     this.currentUserUid.subscribe(value => {
       if (value) {
-        this.userRequestingService.doseUserExists().subscribe(value => {
-          if (!value) {
-            this.router.navigate(['/']).then();
-          }
-        })
+        this.isUserExists(value);
+      }
+    })
+  }
+
+  isUserExists(uid: string){
+    this.userRequestingService.doseUserExists(uid).subscribe(value => {
+      if (!value) {
+        this.router.navigate(['/']).then();
       }
     })
   }

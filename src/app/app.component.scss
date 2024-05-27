@@ -18,7 +18,7 @@
     }
 
     ul {
-      @apply w-3/5 pl-10 gap-14 flex flex-row items-center;
+      @apply w-3/5 pl-14 gap-14 flex flex-row items-center;
 
       li {
         @apply cursor-pointer hover:text-emerald-700;
