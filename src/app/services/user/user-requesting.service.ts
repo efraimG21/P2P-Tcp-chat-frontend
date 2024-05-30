@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 
@@ -8,7 +8,8 @@ import {HttpClient} from "@angular/common/http";
 export class UserRequestingService {
   private readonly API_Url: string = 'http://0.0.0.0:8080/user-handling';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   doseUserExists(uid: string): Observable<boolean> {
     return this.http.get<boolean>(
