@@ -1,6 +1,15 @@
 import {Component} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import {UserHandlingService} from "../../services/user/user-handling.service";
+import {group} from "@angular/animations";
 
 @Component({
   selector: 'app-sign-on-page',
@@ -8,10 +17,11 @@ import {UserHandlingService} from "../../services/user/user-handling.service";
   styleUrl: './sign-on-page.component.scss'
 })
 export class SignOnPageComponent {
+  private readonly ipAddressRegex = /^[0-9.]$/;
   userForm: FormGroup;
-  userName: FormControl = new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(10)]);
+  userName: FormControl = new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(10)]);
   ipAddress: FormControl = new FormControl('', [Validators.required, Validators.minLength(7), Validators.maxLength(15)]);
-  port: FormControl = new FormControl(0, [Validators.required, Validators.min(1), Validators.max(8000)]);
+  port: FormControl = new FormControl(0, [Validators.required, Validators.min(1), Validators.max(65535)]);
 
   constructor(public userHandlingService: UserHandlingService, formBuilder: FormBuilder) {
     this.userForm = formBuilder.group({
@@ -22,12 +32,11 @@ export class SignOnPageComponent {
   }
 
   validateIPAddressKeyPress(event: KeyboardEvent) {
-    const regex = /^[0-9.]$/;
     const ipAddressValue = this.ipAddress.value + event.key;
     const addressGroups = ipAddressValue.split('.');
     const lastAddressGroup = addressGroups[addressGroups.length - 1];
 
-    if (!regex.test(event.key)) {
+    if (!this.ipAddressRegex.test(event.key)) {
       event.preventDefault();
       return;
     }
@@ -44,13 +53,33 @@ export class SignOnPageComponent {
       return;
     }
 
-    if (parseInt(lastAddressGroup) > 255) {
+    if (parseInt(lastAddressGroup) > 255 || lastAddressGroup.length === 4) {
       event.preventDefault();
       return;
     }
   }
 
+  // private ipAddressValidator(): ValidatorFn {
+  //   return (control: AbstractControl): ValidationErrors | null => {
+  //     const ipAddress = control.value as string;
+  //     const ipAddressGroups = ipAddress.split('.');
+  //
+  //     if (!this.ipAddressRegex.test(ipAddress) || ipAddressGroups.length !== 4) {
+  //       return {ipAddressInvalid: true};
+  //     }
+  //
+  //     for (const group of ipAddressGroups) {
+  //       if (parseInt(group) > 255 || group.length > 3) {
+  //         return {ipAddressInvalid: true};
+  //       }
+  //     }
+  //     console.log(null);
+  //     return null;
+  //   };
+  // }
+
   onSubmit() {
+    console.log('you have been submit');
     // this.userHandlingService.isUserExists()
   }
 }
