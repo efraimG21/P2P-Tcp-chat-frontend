@@ -4,6 +4,9 @@
       <div class="input-rapper">
         <label class="input-label" [for]="userName">Username:</label>
         <input [formControl]="userName" type="text" [minLength]="5" [maxLength]="10" placeholder="User name.">
+        @if (userName.value.length !== 0 && userName.invalid) {
+          <p class="text-red-700">invalid</p>
+        }
       </div>
       <div class="input-rapper">
         <label class="input-label" [for]="ipAddress">IP Address:</label>
@@ -17,11 +20,20 @@
           placeholder="Ip Address"
           (keypress)="validateIPAddressKeyPress($event)"
         >
+        @if (ipAddress.value.length > 0 && ipAddress.invalid) {
+          <p class="text-red-700">invalid</p>
+        }
       </div>
       <div class="input-rapper">
         <label class="input-label" [for]="port">Port:</label>
         <input [formControl]="port" type="number" id="port" name="port" [min]="1" [max]="65535" placeholder="Port">
+        @if (port.value !== 0 && port.invalid) {
+          <p class="text-red-700">invalid</p>
+        }
       </div>
+      @if (userForm.valid) {
+        <p class="text-green-600">valid</p>
+      }
       <button class="submit-form-button" type="submit" [disabled]="userForm.invalid"
               [ngClass]="{'submit-form-valid': userForm.valid}">Submit
       </button>

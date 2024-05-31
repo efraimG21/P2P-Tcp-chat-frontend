@@ -10,6 +10,7 @@ import {
 } from "@angular/forms";
 import {UserHandlingService} from "../../services/user/user-handling.service";
 import {group} from "@angular/animations";
+import {UserFormInterface, UserInterface} from "../../interfaces/user-interface";
 
 @Component({
   selector: 'app-sign-on-page',
@@ -20,7 +21,7 @@ export class SignOnPageComponent {
   private readonly ipAddressRegex = /^[0-9.]$/;
   userForm: FormGroup;
   userName: FormControl = new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(10)]);
-  ipAddress: FormControl = new FormControl('', [Validators.required, Validators.minLength(7), Validators.maxLength(15)]);
+  ipAddress: FormControl = new FormControl('', [Validators.required, this.ipAddressValidator()]);
   port: FormControl = new FormControl(0, [Validators.required, Validators.min(1), Validators.max(65535)]);
 
   constructor(public userHandlingService: UserHandlingService, formBuilder: FormBuilder) {
@@ -59,27 +60,33 @@ export class SignOnPageComponent {
     }
   }
 
-  // private ipAddressValidator(): ValidatorFn {
-  //   return (control: AbstractControl): ValidationErrors | null => {
-  //     const ipAddress = control.value as string;
-  //     const ipAddressGroups = ipAddress.split('.');
-  //
-  //     if (!this.ipAddressRegex.test(ipAddress) || ipAddressGroups.length !== 4) {
-  //       return {ipAddressInvalid: true};
-  //     }
-  //
-  //     for (const group of ipAddressGroups) {
-  //       if (parseInt(group) > 255 || group.length > 3) {
-  //         return {ipAddressInvalid: true};
-  //       }
-  //     }
-  //     console.log(null);
-  //     return null;
-  //   };
-  // }
+  private ipAddressValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const ipAddress = control.value as string;
+      const ipAddressGroups = ipAddress.split('.');
+      const minMaxLengthGroupRegex = /^\d{1,3}$/;
+
+      if (!this.ipAddressRegex.test(ipAddress) && ipAddressGroups.length !== 4) {
+        return {ipAddressInvalid: true};
+      }
+
+      for (const group of ipAddressGroups) {
+        if (parseInt(group) > 255 || !minMaxLengthGroupRegex.test(group)) {
+          return {ipAddressInvalid: true};
+        }
+      }
+
+      return null;
+    };
+  }
 
   onSubmit() {
     console.log('you have been submit');
-    // this.userHandlingService.isUserExists()
+    const body : UserFormInterface = {
+      name: this.userName.value,
+      ipAddress: this.ipAddress.value,
+      port: this.port.value,
+    }
+    this.userHandlingService.createUser(body);
   }
 }

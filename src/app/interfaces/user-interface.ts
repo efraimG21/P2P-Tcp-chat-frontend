@@ -4,3 +4,9 @@ export interface UserInterface {
   ipAddress: string,
   port: string,
 }
+
+export interface UserFormInterface {
+  name: string,
+  ipAddress: string,
+  port: string,
+}
