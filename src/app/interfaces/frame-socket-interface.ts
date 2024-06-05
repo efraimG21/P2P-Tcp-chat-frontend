@@ -1,10 +1,12 @@
+import {UserInterface} from "./user-interface";
+
 export interface FrameSocketInterface {
-  typeOf: 'userLogIn' | 'userLogOut' | 'messageReceived';
-  content: string | FrameMessageSocketInterface;
+  typeOf: 'userLogIn' | 'userLogOut' | 'sendMessage' | 'messageReceived' | 'messageRead';
+  content: string | FrameMessageSocketInterface | UserInterface;
 }
 
 export interface FrameMessageSocketInterface {
   chatUID: string;
-  userSenderUID: string;
+  uidReceived: string;
   content: string;
 }

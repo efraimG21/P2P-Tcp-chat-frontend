@@ -11,4 +11,9 @@ export class AppComponent {
 
   constructor(public userHandlingService: UserHandlingService) {
   }
+
+  onLogout(): void {
+    this.userHandlingService.isActive$.next(false);
+    this.userHandlingService.currentUserUid.next(null);
+  }
 }

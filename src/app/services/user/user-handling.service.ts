@@ -31,6 +31,7 @@ export class UserHandlingService {
   createUser(user: UserFormInterface) {
     this.userRequestingService.createNewUser(user).subscribe({
       next: (response) => {
+        this.currentUserUid.next(response.content)
         this.toasterService.success(response.message)
         this.router.navigate(['/chat/',response.content])
       },

@@ -19,13 +19,8 @@ export class UsersListSectionComponent implements OnDestroy {
     public usersListHandlingService: UsersListHandlingService,
     public chatHandlingService: ChatHandlingService
   ) {
-    usersListHandlingService.knownUserList$.pipe(takeUntil(this.unsubscribe$))
-      .subscribe(value => this.knownUsersList$.next(value))
-    usersListHandlingService.unknownUserList$.pipe(takeUntil(this.unsubscribe$))
-      .subscribe(value => {
-        console.log(value);
-        this.unknownUsersList$.next(value)
-      })
+    usersListHandlingService.unknownUserList$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.unknownUsersList$)
+    usersListHandlingService.knownUserList$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.knownUsersList$)
   }
 
   changeUserListState(state: boolean) {

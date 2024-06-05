@@ -21,13 +21,7 @@ export class ChatSectionComponent {
       messageInput: this.messageInput,
       filesInput: this.filesInput,
     });
-    this.chatHandlingService.messages$.subscribe(value => {
-      this.messageList$.next(value);
-    })
-
-    this.messageList$.subscribe(value => {
-      console.log(value)
-    })
+    this.chatHandlingService.messages$.subscribe(this.messageList$)
   }
 
   sendMessage() {
