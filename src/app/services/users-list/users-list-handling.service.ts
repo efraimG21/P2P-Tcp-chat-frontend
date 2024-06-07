@@ -50,4 +50,29 @@ export class UsersListHandlingService {
     }
   }
 
+  removeUserFromList(uid: string) {
+    const userList = this.userList$.getValue();
+    const knownUserList = this.knownUserList$.getValue();
+    const unknownUserList = this.unknownUserList$.getValue();
+
+    const userIndex = userList.findIndex((user) => user._id === uid);
+    const knownUserIndex = knownUserList.findIndex((user) => user._id === uid);
+    const unknownUserIndex = unknownUserList.findIndex((user) => user._id === uid);
+
+    if (userIndex !== -1) {
+      userList.splice(userIndex, 1);
+      this.userList$.next(userList);
+    }
+
+    if (knownUserIndex !== -1) {
+      knownUserList.splice(knownUserIndex, 1);
+      this.knownUserList$.next(knownUserList);
+    }
+
+    if (unknownUserIndex !== -1) {
+      unknownUserList.splice(unknownUserIndex, 1);
+      this.unknownUserList$.next(unknownUserList);
+    }
+  }
+
 }

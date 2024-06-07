@@ -34,8 +34,11 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         console.log(frame)
         if (frame.typeOf === 'userLogIn')
         {
-          console.log(frame.content as UserInterface)
           this.usersListHandlingService.addUserToList(frame.content as UserInterface)
+        }
+        else if (frame.typeOf === 'userLogOut')
+        {
+          this.usersListHandlingService.removeUserFromList(frame.content as string)
         }
       },
       error: err => {
