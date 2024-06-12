@@ -15,9 +15,10 @@ export class ChatHandlingService {
 
   constructor(
     private chatRequestingService: ChatRequestingService, private userHandlingService: UserHandlingService) {
-    this.selectedUserUid$.subscribe(value => {
-      if (this.userHandlingService.currentUserUid.value && value) {
-        this.getChat(this.userHandlingService.currentUserUid.value, value);
+    this.selectedUserUid$.subscribe(selectedUserUid => {
+      let currentUserUid = this.userHandlingService.currentUserUid$.getValue()
+      if (currentUserUid && selectedUserUid) {
+        this.getChat(currentUserUid, selectedUserUid);
       }
     })
   }
@@ -30,5 +31,11 @@ export class ChatHandlingService {
       })
   }
 
+  messageReceived(message: MessageInterface) {
+    if (this.selectedUserUid$.value === message.senderUid)
+    {
+      this.messages$.next([...this.messages$.value, message])
+    }
+  }
 
 }

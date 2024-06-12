@@ -1,12 +1,19 @@
 import {UserInterface} from "./user-interface";
+import {MessageInterface} from "./message-interface";
 
 export interface FrameSocketInterface {
-  typeOf: 'userLogIn' | 'userLogOut' | 'sendMessage' | 'messageReceived' | 'messageRead';
-  content: string | FrameMessageSocketInterface | UserInterface;
+  typeOf: 'userLogIn' | 'userLogOut' | 'message' | 'sendMessage'  | 'messageReceived' | 'messageRead';
+  frame: string | FrameMessageSocketInterface | UserInterface | MessageInterface | FrameMessageStatusUpdateSocketInterface;
 }
 
 export interface FrameMessageSocketInterface {
-  chatUID: string;
-  uidReceived: string;
-  content: string;
+  chatUid: string,
+  receivedUid: string,
+  content: string,
+  timeStamp: string,
+}
+
+export interface FrameMessageStatusUpdateSocketInterface {
+  chatUid: string,
+  senderUid: string,
 }

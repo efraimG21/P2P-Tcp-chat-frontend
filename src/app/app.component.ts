@@ -14,6 +14,6 @@ export class AppComponent {
 
   onLogout(): void {
     this.userHandlingService.isActive$.next(false);
-    this.userHandlingService.currentUserUid.next(null);
+    this.userHandlingService.currentUserUid$.next(null);
   }
 }

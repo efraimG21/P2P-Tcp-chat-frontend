@@ -12,12 +12,12 @@ import {ChatHandlingService} from "../../../services/chat/chat-handling.service"
 export class UsersListSectionComponent implements OnDestroy {
   knownUsersList$ = new BehaviorSubject<UserInterface[]>([]);
   unknownUsersList$ = new BehaviorSubject<UserInterface[]>([]);
-  private unsubscribe$ = new Subject<void>();
   userListState: boolean = false;
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
-    public usersListHandlingService: UsersListHandlingService,
-    public chatHandlingService: ChatHandlingService
+    protected usersListHandlingService: UsersListHandlingService,
+    protected chatHandlingService: ChatHandlingService
   ) {
     usersListHandlingService.unknownUserList$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.unknownUsersList$)
     usersListHandlingService.knownUserList$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.knownUsersList$)
@@ -28,6 +28,11 @@ export class UsersListSectionComponent implements OnDestroy {
   }
 
   onSelectedUser(userUid: string) {
+    if (!this.userListState)
+    {
+      this.usersListHandlingService.moveUserToKnownList(userUid)
+      this.userListState = true
+    }
     this.chatHandlingService.selectedUserUid$.next(userUid);
   }
 

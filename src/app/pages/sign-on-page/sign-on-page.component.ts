@@ -9,8 +9,7 @@ import {
   Validators
 } from "@angular/forms";
 import {UserHandlingService} from "../../services/user/user-handling.service";
-import {group} from "@angular/animations";
-import {UserFormInterface, UserInterface} from "../../interfaces/user-interface";
+import {UserFormInterface} from "../../interfaces/user-interface";
 
 @Component({
   selector: 'app-sign-on-page',
@@ -18,13 +17,13 @@ import {UserFormInterface, UserInterface} from "../../interfaces/user-interface"
   styleUrl: './sign-on-page.component.scss'
 })
 export class SignOnPageComponent {
-  private readonly ipAddressRegex = /^[0-9.]$/;
   userForm: FormGroup;
   userName: FormControl = new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(10)]);
   ipAddress: FormControl = new FormControl('', [Validators.required, this.ipAddressValidator()]);
   port: FormControl = new FormControl(0, [Validators.required, Validators.min(1), Validators.max(65535)]);
+  private readonly ipAddressRegex = /^[0-9.]$/;
 
-  constructor(public userHandlingService: UserHandlingService, formBuilder: FormBuilder) {
+  constructor(protected userHandlingService: UserHandlingService, protected formBuilder: FormBuilder) {
     this.userForm = formBuilder.group({
       username: this.userName,
       ipAddress: this.ipAddress,
@@ -60,11 +59,25 @@ export class SignOnPageComponent {
     }
   }
 
+  onSubmit() {
+    console.log('you have been submit');
+    const body: UserFormInterface = {
+      name: this.userName.value,
+      ipAddress: this.ipAddress.value,
+      port: this.port.value,
+    }
+    this.userHandlingService.createUser(body);
+  }
+
   private ipAddressValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const ipAddress = control.value as string;
       const ipAddressGroups = ipAddress.split('.');
       const minMaxLengthGroupRegex = /^\d{1,3}$/;
+
+      if (!ipAddress) {
+        return {ipAddressInvalid: true};
+      }
 
       if (!this.ipAddressRegex.test(ipAddress) && ipAddressGroups.length !== 4) {
         return {ipAddressInvalid: true};
@@ -78,15 +91,5 @@ export class SignOnPageComponent {
 
       return null;
     };
-  }
-
-  onSubmit() {
-    console.log('you have been submit');
-    const body : UserFormInterface = {
-      name: this.userName.value,
-      ipAddress: this.ipAddress.value,
-      port: this.port.value,
-    }
-    this.userHandlingService.createUser(body);
   }
 }

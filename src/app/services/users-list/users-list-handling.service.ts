@@ -1,28 +1,27 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, retry} from "rxjs";
+import {BehaviorSubject} from "rxjs";
 import {UserInterface} from "../../interfaces/user-interface";
-import {HttpClient} from "@angular/common/http";
 import {UserHandlingService} from "../user/user-handling.service";
-import {UserRequestingService} from "../user/user-requesting.service";
 import {UsersListRequestingService} from "./users-list-requesting.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersListHandlingService {
-  private userList$ = new BehaviorSubject<UserInterface[]>([])
   knownUserList$ = new BehaviorSubject<UserInterface[]>([])
   unknownUserList$ = new BehaviorSubject<UserInterface[]>([])
+  private userList$ = new BehaviorSubject<UserInterface[]>([])
 
   constructor(private userHandlingService: UserHandlingService,
-              private usersListRequestingService: UsersListRequestingService)
-  {
-    userHandlingService.currentUserUid.subscribe(currentUserUid => {
+              private usersListRequestingService: UsersListRequestingService) {
+    this.userHandlingService.currentUserUid$.subscribe(currentUserUid => {
       if (currentUserUid) {
-        this.usersListRequestingService.getUsersList().pipe().subscribe(value => {
-          this.userList$.next(value.filter(user => user._id.toString() !== currentUserUid))
-          this.unknownUserList$.next(this.userList$.getValue())
-        });
+        this.usersListRequestingService.getSortedUsersList(currentUserUid).subscribe(usersLists => {
+            this.userList$.next(usersLists.users)
+            this.knownUserList$.next(usersLists.knownUsers)
+            this.unknownUserList$.next(usersLists.unknownUsers)
+          }
+        );
       }
     })
 
@@ -33,6 +32,7 @@ export class UsersListHandlingService {
     const unknownUserList = this.unknownUserList$.getValue()
     const knownUserList = this.knownUserList$.getValue()
 
+    console.log('user: ',user, 'list: ',userList)
     const userExists = userList.find(
       value => value._id.toString() === user._id.toString()
     );
@@ -40,12 +40,10 @@ export class UsersListHandlingService {
     if (userExists) {
       return;
     }
-    if (!unknownUserList.includes(user))
-    {
+    if (!unknownUserList.includes(user)) {
       this.userList$.next([...userList, user])
       this.unknownUserList$.next([...unknownUserList, user]);
-    }
-    else {
+    } else {
       this.knownUserList$.next([...knownUserList, user]);
     }
   }
@@ -73,6 +71,20 @@ export class UsersListHandlingService {
       unknownUserList.splice(unknownUserIndex, 1);
       this.unknownUserList$.next(unknownUserList);
     }
+  }
+
+  moveUserToKnownList(uid: string) {
+    const knownUserList = this.knownUserList$.getValue();
+    const unknownUserList = this.unknownUserList$.getValue();
+    const userIndex = unknownUserList.findIndex((user) => user._id.toString() === uid);
+    const user = unknownUserList[userIndex];
+
+    if (userIndex !== -1) {
+      unknownUserList.splice(userIndex, 1);
+      this.unknownUserList$.next(unknownUserList);
+    }
+
+    this.knownUserList$.next([user, ...knownUserList])
   }
 
 }

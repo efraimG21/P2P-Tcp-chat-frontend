@@ -1,6 +1,6 @@
 export interface MessageInterface {
   senderUid: string,
   content: string,
-  timeStamp: Date,
+  timeStamp: String,
   status: 'Sent' | 'Received' | 'Read',
 }

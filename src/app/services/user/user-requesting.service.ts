@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {UserFormInterface, UserInterface} from "../../interfaces/user-interface";
+import {UserFormInterface} from "../../interfaces/user-interface";
 import {ApiResponse} from "../../interfaces/api-response";
 
 @Injectable({

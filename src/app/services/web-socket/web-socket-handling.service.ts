@@ -4,7 +4,6 @@ import {UserHandlingService} from "../user/user-handling.service";
 import {webSocket} from "rxjs/webSocket";
 import {Observable} from "rxjs";
 import {FrameSocketInterface} from "../../interfaces/frame-socket-interface";
-import {ActivatedRoute, Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ export class WebSocketHandlingService {
   }
 
   startSocket(): void {
-    const socketURL = `${this.API_URL}/${this.userHandlingService.currentUserUid.getValue()}`;
+    const socketURL = `${this.API_URL}/${this.userHandlingService.currentUserUid$.getValue()}`;
     this.socket$ = webSocket(socketURL);
     this.userHandlingService.isActive$.next(true);
     console.log('socket is active:', this.socket$);

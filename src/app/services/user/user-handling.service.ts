@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {Router} from "@angular/router";
 import {UserRequestingService} from "./user-requesting.service";
-import {UserFormInterface, UserInterface} from "../../interfaces/user-interface";
+import {UserFormInterface} from "../../interfaces/user-interface";
 import {ToastrService} from "ngx-toastr";
 
 @Injectable({
@@ -10,10 +10,10 @@ import {ToastrService} from "ngx-toastr";
 })
 export class UserHandlingService {
   isActive$ = new BehaviorSubject<boolean>(false);
-  currentUserUid = new BehaviorSubject<string | null>(null);
+  currentUserUid$ = new BehaviorSubject<string | null>(null);
 
   constructor(private router: Router, private userRequestingService: UserRequestingService, private toasterService: ToastrService) {
-    this.currentUserUid.subscribe(value => {
+    this.currentUserUid$.subscribe(value => {
       if (value) {
         this.isUserExists(value);
       }
@@ -31,9 +31,9 @@ export class UserHandlingService {
   createUser(user: UserFormInterface) {
     this.userRequestingService.createNewUser(user).subscribe({
       next: (response) => {
-        this.currentUserUid.next(response.content)
+        this.currentUserUid$.next(response.content)
         this.toasterService.success(response.message)
-        this.router.navigate(['/chat/',response.content])
+        this.router.navigate(['/chat/', response.content])
       },
       error: (error) => {
         this.toasterService.error(error.error, error.status)

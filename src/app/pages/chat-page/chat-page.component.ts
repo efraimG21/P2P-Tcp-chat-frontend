@@ -5,7 +5,8 @@ import {WebSocketHandlingService} from "../../services/web-socket/web-socket-han
 import {Subject, takeUntil} from "rxjs";
 import {UserInterface} from "../../interfaces/user-interface";
 import {UsersListHandlingService} from "../../services/users-list/users-list-handling.service";
-import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
+import {ChatHandlingService} from "../../services/chat/chat-handling.service";
+import {MessageInterface} from "../../interfaces/message-interface";
 
 @Component({
   selector: 'app-chat-page',
@@ -17,28 +18,29 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    public userHandlingService: UserHandlingService,
-    private router: Router,
+    protected userHandlingService: UserHandlingService,
     private activatedRoute: ActivatedRoute,
     private webSocketHandlingService: WebSocketHandlingService,
-    private usersListHandlingService: UsersListHandlingService
+    private usersListHandlingService: UsersListHandlingService,
+    private chatHandlingService: ChatHandlingService
   ) {
 
-    userHandlingService.currentUserUid.next(activatedRoute.snapshot.paramMap.get('uid'));
+    userHandlingService.currentUserUid$.next(this.activatedRoute.snapshot.paramMap.get('uid'));
     this.webSocketHandlingService.startSocket()
   }
 
   ngOnInit() {
     this.webSocketHandlingService.getMessage().pipe(takeUntil(this.destroy$)).subscribe({
       next: frame => {
-        console.log(frame)
-        if (frame.typeOf === 'userLogIn')
-        {
-          this.usersListHandlingService.addUserToList(frame.content as UserInterface)
-        }
-        else if (frame.typeOf === 'userLogOut')
-        {
-          this.usersListHandlingService.removeUserFromList(frame.content as string)
+
+        if (frame.typeOf === 'userLogIn') {
+          this.usersListHandlingService.addUserToList(frame.frame as UserInterface)
+        } else if (frame.typeOf === 'userLogOut') {
+          this.usersListHandlingService.removeUserFromList(frame.frame as string)
+        } else if (frame.typeOf === 'sendMessage') {
+          this.chatHandlingService.messageReceived(frame.frame as MessageInterface)
+        } else if (frame.typeOf === 'messageReceived' || frame.typeOf === 'messageRead') {
+          console.log('frame of messageReceived', frame)
         }
       },
       error: err => {
@@ -48,6 +50,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.webSocketHandlingService.onClose()
   }
 }
