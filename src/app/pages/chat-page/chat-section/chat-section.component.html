@@ -13,7 +13,7 @@
           <p class="text-lg">{{ message.content }}</p>
           <div class="flex justify-start gap-1.5">
             <p class="flex justify-center items-center">
-              @if (message.status === 'Sent') {
+              @if (message.status === MessageStatus.Sent) {
                 <svg viewBox="0 0 12 11" height="11" width="16" preserveAspectRatio="xMidYMid meet" class=""
                      fill="none">
                   <title>
@@ -24,7 +24,7 @@
                 </svg>
               } @else {
                 <svg viewBox="0 0 16 11" height="11" width="16" preserveAspectRatio="xMidYMid meet"
-                     [ngClass]="{'text-cyan-950': message.status === 'Read'}" fill="none">
+                     [ngClass]="{'text-cyan-950': message.status === MessageStatus.Read}" fill="none">
                   <title>
                     msg-dbl-check</title>
                   <path

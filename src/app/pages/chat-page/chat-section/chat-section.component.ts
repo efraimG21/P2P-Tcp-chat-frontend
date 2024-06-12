@@ -1,7 +1,7 @@
 import {AfterViewChecked, Component, ElementRef, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BehaviorSubject} from "rxjs";
-import {MessageInterface} from "../../../interfaces/message-interface";
+import {MessageInterface, MessageStatus} from "../../../interfaces/message-interface";
 import {ChatHandlingService} from "../../../services/chat/chat-handling.service";
 import {WebSocketHandlingService} from "../../../services/web-socket/web-socket-handling.service";
 import {FrameMessageSocketInterface} from "../../../interfaces/frame-socket-interface";
@@ -54,9 +54,11 @@ export class ChatSectionComponent implements AfterViewChecked{
         senderUid: this.userHandlingService.currentUserUid$.value,
         content: messageFrame.content,
         timeStamp: messageFrame.timeStamp,
-        status: 'Sent'
+        status: MessageStatus.Sent
       };
       this.chatHandlingService.messages$.next([...this.chatHandlingService.messages$.value, message]);
     }
   }
+
+  protected readonly MessageStatus = MessageStatus;
 }

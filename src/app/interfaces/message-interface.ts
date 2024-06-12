@@ -2,5 +2,11 @@ export interface MessageInterface {
   senderUid: string,
   content: string,
   timeStamp: String,
-  status: 'Sent' | 'Received' | 'Read',
+  status: MessageStatus,
+}
+
+export enum MessageStatus {
+  Sent ,
+  Received,
+  Read,
 }
